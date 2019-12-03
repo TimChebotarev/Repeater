@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Speech Recording</title>
+</head>
+
+<body>
+  <script>
+    const recordAudio = () =>
+      new Promise(async resolve => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
+        const audioChunks = [];
+
+        mediaRecorder.addEventListener("dataavailable", event => {
+          audioChunks.push(event.data);
+        });
+
+        const start = () => mediaRecorder.start();
+
+        const stop = () =>
+          new Promise(resolve => {
+            mediaRecorder.addEventListener("stop", () => {
+              const audioBlob = new Blob(audioChunks);
+              const audioUrl = URL.createObjectURL(audioBlob);
+              const audio = new Audio(audioUrl);
+              const play = () => audio.play();
+              resolve({ audioBlob, audioUrl, audio, play });
+            });
+
+            mediaRecorder.stop();
+          });
+
+        resolve({ start, stop });
+      });
+
+    // const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+
+    // (async () => {
+    //   const recorder = await recordAudio();
+    //   recorder.start();
+    //   await sleep(3000);
+    //   const audio = await recorder.stop();
+    //   audio.play();
+    // })();
+
+
+    const recognition = (onUpdateCallback) => {
+      window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+      let finalTranscript = '', isStarted = false;
+      let speechRecognition = new window.SpeechRecognition();
+      speechRecognition.lang = 'ru-RU';
+      speechRecognition.interimResults = true;
+      speechRecognition.maxAlternatives = 10;
+      speechRecognition.continuous = true;
+      speechRecognition.onresult = (event) => {
+        let interimTranscript = '';
+        for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+          let transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+        document.querySelector('body').innerHTML = finalTranscript + '<i style="color:#ddd;">' + interimTranscript + '</>';
+        onUpdateCallback(finalTranscript, interimTranscript)
+      }
+
+      speechRecognition.onend = function () {
+        console.log('end')
+        if (isStarted) speechRecognition.start();
+      }
+
+      const start = () => {
+        if (isStarted) return
+        finalTranscript = '', isStarted = true;
+        speechRecognition.start();
+      }
+
+      const stop = () => {
+        if (!isStarted) return
+        finalTranscript = '', isStarted = false;
+        speechRecognition.stop();
+      }
+
+      return { start, stop }
+    }
+
+
+    (async () => {
+      const r = await recordAudio()
+
+
+      const onRecognUpdate = async (final = '', interm = '') => {
+        console.log(final, interm, r)
+        if (final.includes('научиться')) {
+          recogn.stop()
+          audio = await r.stop()
+          console.log(audio)
+          audio.audio.onended = (event) => {
+            r.start()
+            recogn.start()
+          };
+          audio.play()
+        }
+      }
+      const recogn = recognition(onRecognUpdate)
+      r.start()
+      recogn.start()
+    })()
+  </script>
+</body>
+
+</html>

@@ -3,7 +3,7 @@ import './App.css';
 import { recordAudio, recognition } from './utils'
 
 function App() {
-  const [transcript, setTranscript] = useState('')
+  const [transcript, setTranscript] = useState('твыыорывола')
   const [r, setR] = useState()
   const [recogn, setRecogn] = useState(recognition())
 
@@ -28,7 +28,7 @@ function App() {
     let audio
     setTranscript(final)
     console.log(final)
-    if (final.includes('научиться')) {
+    if (final.includes('да')) {
       console.log('match!!!')
       recogn.stop()
       audio = await r.stop()
@@ -43,10 +43,10 @@ function App() {
 
   return (
     <div className="App">
-      <button onClick={handlerStart}>Start</button>
-      <button onClick={handlerStop}>Stop</button>
+      <button className="button" onClick={handlerStart}>Start</button>
+      <button className="button" onClick={handlerStop}>Stop</button>
       <hr />
-      <div>{transcript}</div>
+      <textarea className="text" readOnly value={transcript}></textarea>
     </div>
   );
 }
