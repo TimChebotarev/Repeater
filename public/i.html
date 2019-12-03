@@ -29,7 +29,7 @@
               const audioUrl = URL.createObjectURL(audioBlob);
               const audio = new Audio(audioUrl);
               const play = () => audio.play();
-              resolve({ audioBlob, audioUrl, play });
+              resolve({ audioBlob, audioUrl, audio, play });
             });
 
             mediaRecorder.stop();
@@ -38,7 +38,7 @@
         resolve({ start, stop });
       });
 
-    const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+    // const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
     // (async () => {
     //   const recorder = await recordAudio();
@@ -49,33 +49,70 @@
     // })();
 
 
+    const recognition = (onUpdateCallback) => {
+      window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+      let finalTranscript = '', isStarted = false;
+      let speechRecognition = new window.SpeechRecognition();
+      speechRecognition.lang = 'ru-RU';
+      speechRecognition.interimResults = true;
+      speechRecognition.maxAlternatives = 10;
+      speechRecognition.continuous = true;
+      speechRecognition.onresult = (event) => {
+        let interimTranscript = '';
+        for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+          let transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+        document.querySelector('body').innerHTML = finalTranscript + '<i style="color:#ddd;">' + interimTranscript + '</>';
+        onUpdateCallback(finalTranscript, interimTranscript)
+      }
+
+      speechRecognition.onend = function () {
+        console.log('end')
+        if (isStarted) speechRecognition.start();
+      }
+
+      const start = () => {
+        if (isStarted) return
+        finalTranscript = '', isStarted = true;
+        speechRecognition.start();
+      }
+
+      const stop = () => {
+        if (!isStarted) return
+        finalTranscript = '', isStarted = false;
+        speechRecognition.stop();
+      }
+
+      return { start, stop }
+    }
 
 
-    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-    let finalTranscript = '';
-    let recognition = new window.SpeechRecognition();
-    recognition.lang = 'ru-RU';
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 10;
-    recognition.continuous = true;
-    recognition.onresult = (event) => {
-      let interimTranscript = '';
-      for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
-        let transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-          finalTranscript += transcript;
-        } else {
-          interimTranscript += transcript;
+    (async () => {
+      const r = await recordAudio()
+
+
+      const onRecognUpdate = async (final = '', interm = '') => {
+        console.log(final, interm, r)
+        if (final.includes('научиться')) {
+          recogn.stop()
+          audio = await r.stop()
+          console.log(audio)
+          audio.audio.onended = (event) => {
+            r.start()
+            recogn.start()
+          };
+          audio.play()
         }
       }
-      document.querySelector('body').innerHTML = finalTranscript + '<i style="color:#ddd;">' + interimTranscript + '</>';
-    }
-
-    recognition.onend = function () {
-      console.log('end')
-      recognition.start();
-    }
-    recognition.start();
+      const recogn = recognition(onRecognUpdate)
+      r.start()
+      recogn.start()
+    })()
   </script>
 </body>
 
