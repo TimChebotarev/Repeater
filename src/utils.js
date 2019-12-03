@@ -25,7 +25,8 @@ const recordAudio = () =>
           resolve({ audioBlob, audioUrl, audio, play });
         });
 
-        mediaRecorder.stop();
+        if (mediaRecorder.state !== 'inactive')
+          mediaRecorder.stop();
         audioChunks.length = 0
       });
 

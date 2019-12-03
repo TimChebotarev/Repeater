@@ -18,17 +18,17 @@ function App() {
   }, [recogn])
 
   const handlerStop = useCallback(() => {
-    if (recogn && r) {
-      recogn.stop()
-      r.stop()
-    }
+
+    recogn.stop()
+    r.stop()
+
   }, [r, recogn])
 
   const onRecognUpdate = useCallback(async (final = '', interm = '') => {
     let audio
     setTranscript(final)
     console.log(final)
-    if (final.includes('да')) {
+    if (final.includes('научиться')) {
       console.log('match!!!')
       recogn.stop()
       audio = await r.stop()
