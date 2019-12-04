@@ -20,6 +20,7 @@ const Recorder = () =>
           const audioBlob = new Blob(audioChunks);
           const audioUrl = URL.createObjectURL(audioBlob);
           const audio = new Audio(audioUrl);
+          console.log({ audio })
           const play = () => audio.play();
           resolve({ audioBlob, audioUrl, audio, play });
         });

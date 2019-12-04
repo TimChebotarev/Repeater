@@ -5,6 +5,7 @@ import Recognizer from './recognizer'
 const useRepeater = () => {
   const [transcript, setTranscript] = useState('')
   const [recorder, setRecorder] = useState()
+  const [audio, setAudio] = useState()
   const [recognizer] = useState(Recognizer())
 
   const start = useCallback(async () => {
@@ -18,20 +19,22 @@ const useRepeater = () => {
   const stop = useCallback(() => {
     recognizer.stop()
     recorder.stop()
-  }, [recorder, recognizer])
+    console.log({ audio })
+    if (audio) audio.pause()
+  }, [recognizer, recorder, audio])
 
   const onRecognUpdate = useCallback(async (final = '', interm = '') => {
-    let audio
     setTranscript(final)
     console.log(final)
     if (final.includes('очень хорошо')) {
       console.log('match!!!')
       recognizer.stop()
-      audio = await recorder.stop()
-      audio.audio.onended = (event) => {
+      const a = await recorder.stop()
+      a.audio.onended = (event) => {
         start()
       };
-      audio.play()
+      setAudio(a.audio)
+      a.play()
     }
   }, [recognizer, recorder, start])
 
