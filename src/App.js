@@ -18,15 +18,13 @@ function App() {
   }, [recogn])
 
   const handlerStop = useCallback(() => {
-
     recogn.stop()
     r.stop()
-
   }, [r, recogn])
 
   const onRecognUpdate = useCallback(async (final = '', interm = '') => {
     let audio
-    setTranscript(final)
+    setTranscript(interm)
     console.log(final)
     if (final.includes('очень хорошо')) {
       console.log('match!!!')
@@ -39,12 +37,14 @@ function App() {
     }
   }, [handlerStart, r, recogn])
 
+
   recogn.setCallback(onRecognUpdate)
 
   return (
     <div className="App">
       <button className="button" onClick={handlerStart}>Start</button>
       <button className="button" onClick={handlerStop}>Stop</button>
+      <button className="button" onClick={handlerTrain}>Train</button>
       <hr />
       <textarea className="text" readOnly value={transcript}></textarea>
     </div>
