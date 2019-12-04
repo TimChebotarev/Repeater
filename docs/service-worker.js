@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "https://timchebotarev.github.io/Repeater/precache-manifest.18fae45f5e1e70053d3e91a9d1c73a88.js"
+  "https://timchebotarev.github.io/Repeater/precache-manifest.42df8869c0779f2beebca1ab8dac8992.js"
 );
 
 self.addEventListener('message', (event) => {
