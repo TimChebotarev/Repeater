@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "6382c29119443878a17d6621a334f9a0",
+    "revision": "a08af12b089a0eab22d15601b65c7a63",
     "url": "https://timchebotarev.github.io/Repeater/index.html"
   },
   {
-    "revision": "b595edc3c62059367114",
+    "revision": "8f5fe6a682c8197f12fe",
     "url": "https://timchebotarev.github.io/Repeater/static/css/main.c373f0d0.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "https://timchebotarev.github.io/Repeater/static/js/2.64b2b060.chunk.js"
   },
   {
-    "revision": "b595edc3c62059367114",
-    "url": "https://timchebotarev.github.io/Repeater/static/js/main.5d86336e.chunk.js"
+    "revision": "8f5fe6a682c8197f12fe",
+    "url": "https://timchebotarev.github.io/Repeater/static/js/main.9746b418.chunk.js"
   },
   {
     "revision": "d7f7ba7e035d3a7d8a0d",

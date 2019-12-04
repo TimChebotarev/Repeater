@@ -49,12 +49,12 @@ const recordAudio = () =>
 // })();
 
 const recognition = () => {
-  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
   let finalTranscript = '', isStarted = false, onUpdateCallback = () => { };
   let speechRecognition = new window.SpeechRecognition();
   speechRecognition.lang = 'ru-RU';
-  speechRecognition.interimResults = true;
-  speechRecognition.maxAlternatives = 10;
+  speechRecognition.interimResults = false;
+  speechRecognition.maxAlternatives = 1;
   speechRecognition.continuous = true;
   speechRecognition.onresult = (event) => {
     let interimTranscript = '';
