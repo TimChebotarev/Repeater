@@ -28,7 +28,7 @@ function App() {
     let audio
     setTranscript(final)
     console.log(final)
-    if (final.includes('да')) {
+    if (final.includes('научиться')) {
       console.log('match!!!')
       recogn.stop()
       audio = await r.stop()
